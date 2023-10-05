@@ -1,0 +1,146 @@
+/*在js裡可以直接取用pinia
+之後的databaseName;axios.defaults.baseURL都統一放在pinia的state裡
+*/
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+createApp().use(createPinia())
+import { useStore } from '@/stores/useStore'
+const store = useStore();
+//在js裡可以直接取用pinia end
+
+// axios 設定
+import axios from 'axios'
+import qs from "qs";
+axios.defaults.baseURL = store.state.base_url  //baseurl
+
+//執行前及執行前動作導入;例:動畫 //這裡重新宣告一次store,不然改變動畫沒反應
+axios.interceptors.request.use(function (config) {
+  // Do something before request is sent
+  const store = useStore()  
+  store.state.loading = true;
+  return config;
+}, function (error) {
+  // Do something with request error
+  const store = useStore()
+  store.state.loading = false;
+  return Promise.reject(error);
+});
+
+//執行前及執行後動作導入;例:動畫 //這裡重新宣告一次store,不然改變動畫沒反應
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+  // Any status code that lie within the range of 2xx cause this function to trigger
+  // Do something with response data
+  const store = useStore()
+  setTimeout(()=>{
+    store.state.loading = false;
+  },500)
+  return response;
+}, function (error) {
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  const store = useStore()
+  store.state.loading = false;
+  return Promise.reject(error);
+});
+
+var api = {
+  //get data
+  async get(database) {
+    console.log('run get')
+    try {
+      const get = await axios.post(`general/getAll/${store.state.databaseName}/${database}`)
+      return get.data;
+    }catch (err){
+      console.log('err',err)
+    }
+  },
+
+  //add data
+  async add(database, data) {
+    console.log('run add')
+    try {
+      const get = await axios.post(`general/add/${store.state.databaseName}/${database}`, qs.stringify(data))
+      return get.data;
+    } catch (err) {
+      console.log('err', err)
+    }
+    
+  },
+
+  //post data (edit , update)
+  async post(database, data) {
+    console.log('run post')
+    try {
+      const get = await axios.post(`general/edit/${store.state.databaseName}/${database}`, qs.stringify(data))
+      return get.data;
+    } catch (err) {
+      console.log('err', err)
+    }
+
+  },
+
+  //delete data
+  async delete(database, data = null) {
+    console.log('run delete')
+    try {
+      const get = await axios.post(`general/delv3/${store.state.databaseName}/${database}`, qs.stringify(data))
+      return get.data;
+    } catch (err) {
+      console.log('err', err)
+    }
+
+  },
+
+  //特別處理 url自定義
+  async options(url, data = null) {
+    console.log('run options')
+    try {
+      const get = await axios.post(`${url}`, qs.stringify(data))
+      return get.data;
+    } catch (err) {
+      console.log('err', err)
+    }
+  },
+
+
+  //上傳檔案,單檔
+  // async upload(database, fd = null) {
+  //   console.log('run upload')
+  //   try {
+  //     const get = await axios.post(`general/upload/${store.state.databaseName}/${database}`, fd)
+  //     return get.data;
+  //   } catch (err) {
+  //     console.log('err', err)
+  //   }
+
+  // },
+
+  //上傳檔案,多檔
+  async upload(database, fd = null) {
+    console.log('run fileUploadMulti', `general/fileUploadMulti/${store.state.databaseName}/${database}`)
+
+    try {
+      const get = await axios.post(`general/fileUploadMulti/${store.state.databaseName}/${database}`, fd)
+      return get.data;
+    } catch (err) {
+      console.log('err', err)
+    }
+
+  },
+
+  //新增多筆資料
+  //addMulti data
+  async addMulti(database, data) {
+    // console.log('run addMulti')
+    try {
+      const get = await axios.post(`general/addMulti/${store.state.databaseName}/${database}`, qs.stringify(data))
+      return get.data;
+    } catch (err) {
+      console.log('err', err)
+    }
+
+  },
+}
+
+export default api;
