@@ -32,11 +32,11 @@ const AddOK = () => {
 
 //editProcess
 const editProcess = (item) => {
-  list.value = {...item};
+  list.value = { ...item };
   isEditing.value = true;
 }
 //確認修改
-const EditOK = () =>{
+const EditOK = () => {
   list.value.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
   $api.post(sheetName, list.value).then(rs => {
@@ -46,7 +46,7 @@ const EditOK = () =>{
       list.value = {};
       isEditing.value = false;
     }
-    
+
   })
 }
 
@@ -65,52 +65,72 @@ const delOK = (item) => {
 
 <template>
   <div>
-    <h1>test</h1>
+    <h1>codeigniter 4 testing (前台 CURD Finish Sample)</h1>
     <hr>
-    <div class="formZone">
-      <div class="inputZone">
+
+    <div class="addZone">
+      <div class="inputText">
         <label for="">Title</label>
         <input type="text" v-model="list.title">
       </div>
-      <div class="inputZone">
+      <div class="inputText">
         <label for="">Content</label>
         <input type="text" v-model="list.content">
       </div>
-      <button @click="AddOK()" v-if="!isEditing">確認新增</button>
-      <button @click="EditOK()" v-if="isEditing">確認修改</button>
+      <button class="buttonStyle" @click="AddOK()" v-if="!isEditing">確認新增</button>
+      <button class="buttonStyle" @click="EditOK()" v-if="isEditing">確認修改</button>
     </div>
-    <hr>
-    Total Datas: {{ datas.length }}
-    <div v-for="item, index in datas" :key="index" class="dataStyle">
-      <button class="editBtn" @click="editProcess(item)">修改</button>
-      <button class="delBtn" @click="delOK(item)">刪除</button>
-      {{ item.id }} - {{ item.title }} - {{ item.content }} - {{ item.createTime }} - {{ item.updateTime }}
-    </div>
-    
-      
-    
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Content</th>
+          <th>InsertTime</th>
+          <th>UpdateTime</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="(item, index) in datas" :key="index">
+          <td>{{ item.id }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.content }}</td>
+          <td>{{ item.insertTime }}</td>
+          <td>{{ item.updateTime }}</td>
+          <td>
+            <button class="buttonStyle" @click="editProcess(item)">修改</button>
+            <button class="buttonStyle" @click="delOK(item)">刪除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+  
 </template>
 
 <style scoped>
-.formZone {
+table {
+  border: solid 1px;
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+.buttonStyle {
+  font-size: 1.2rem;
+}
+
+.addZone {
   display: flex;
-}
-
-.inputZone {
+  align-items: center;
+  gap: 20px;
   font-size: 1.2rem;
 }
 
-.dataStyle {
-  background-color: grey;
-  color: white;
-  margin-top: 2px;
-  border-radius: 5px;
+.addZone div input {
+  margin: 5px;
   font-size: 1.2rem;
-  padding: 5px;
-}
-
-button {
-  cursor: pointer;
 }
 </style>

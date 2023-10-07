@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const useStore = defineStore('counter', () => {
   const state = {
     verMsg: '2023.10.6.1',  //系統版本
-    databaseName: "citest",  //登入廠商代號及讀取的資料庫名
+    databaseName: "news",  //登入廠商代號及讀取的資料庫名
     // base_url: "https://www.pddtvgame.com/portfolioapi", //線上專用指定去讀圖片或其他東西的位置
     // base_url: "http://127.0.0.1/portfolioapi", //線上專用指定去讀圖片或其他東西的位置
     base_url: "http://127.0.0.1/citest", //線上專用指定去讀圖片或其他東西的位置
