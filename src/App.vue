@@ -5,7 +5,8 @@ import api from "@/assets/js/api.js";
 const $api = api;
 
 const datas = ref([])
-const list = ref({})
+const loginList = ref({})
+const dataList = ref({})
 const sheetName = "news" //設定存取的 sheetName 名稱
 const isEditing = ref(false); //設定是否為修改狀態
 
@@ -15,14 +16,14 @@ onMounted(() => {
 
 const getAll = () => {
   $api.get(sheetName).then(rs => {
-    console.log('getdata:', rs.length)
+    console.log('Result:',sheetName, rs)
     datas.value = rs
   })
 }
 
 //確認新增
 const AddOK = () => {
-  $api.add(sheetName, list.value).then(rs => {
+  $api.add(sheetName, dataList.value).then(rs => {
     console.log('add rs', rs)
     if (rs.state == 1) {
       getAll()
@@ -32,18 +33,18 @@ const AddOK = () => {
 
 //editProcess
 const editProcess = (item) => {
-  list.value = { ...item };
+  dataList.value = { ...item };
   isEditing.value = true;
 }
 //確認修改
 const EditOK = () => {
-  list.value.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
+  dataList.value.updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
 
-  $api.post(sheetName, list.value).then(rs => {
+  $api.post(sheetName, dataList.value).then(rs => {
     console.log('edit rs', rs)
     if (rs.state == 1) {
       getAll()
-      list.value = {};
+      dataList.value = {};
       isEditing.value = false;
     }
 
@@ -65,17 +66,25 @@ const delOK = (item) => {
 
 <template>
   <div>
-    <h1>codeigniter 4 testing (前台 CURD Finish Sample)</h1>
+    <div class="flex justify-between items-center">
+      <h1>codeigniter 4 testing (前台 CURD Finish Sample)</h1>
+      <div class="login_section">
+        帳號:<input type="text" v-model="loginList.account">
+        密碼:<input type="text" v-model="loginList.password">
+        <button class="h-8">Login</button>
+      </div>
+      
+    </div>
     <hr>
 
     <div class="addZone">
       <div class="inputText">
         <label for="">Title</label>
-        <input type="text" v-model="list.title">
+        <input type="text" v-model="dataList.title">
       </div>
       <div class="inputText">
         <label for="">Content</label>
-        <input type="text" v-model="list.content">
+        <input type="text" v-model="dataList.content">
       </div>
       <button class="buttonStyle" @click="AddOK()" v-if="!isEditing">確認新增</button>
       <button class="buttonStyle" @click="EditOK()" v-if="isEditing">確認修改</button>

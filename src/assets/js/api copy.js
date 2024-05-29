@@ -15,10 +15,7 @@ import qs from "qs";
 //axios基本設定 -> 及使用 instance取代axios 實例
 const instance = axios.create({
   baseURL: store.state.base_url, //統一使用 vuex 的 store 裡的base_url
-  headers: { 
-		'Content-Type': 'application/json',
-		'Authorization' : store.state.logined_token
-	},
+  // headers: { 'Content-Type': 'application/json' },
   timeout: 10000
 });
 
@@ -45,8 +42,7 @@ instance.interceptors.response.use(function (response) {
   setTimeout(()=>{
     store.state.loading = false;
   },500)
-    console.log('response',response);
-    return response;
+  return response;
 }, function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
@@ -54,7 +50,7 @@ instance.interceptors.response.use(function (response) {
   store.state.loading = false;
 
   // alert('errorMsg:' + error)
-  console.log('errorMsg',error)
+  console.log(error)
 
   //本地網路不通時,回傳 "network error"
   if (!navigator.onLine) {
@@ -82,14 +78,6 @@ instance.interceptors.response.use(function (response) {
   //判斷伺服器回應狀況
   if (error.response) {
     switch (error.response.status) {
-      case 401:
-        // console.log("你要找的頁面不存在")
-        store.showToast({
-          type: 'error',
-          message: '未授權請求',
-          closeTime: 5,
-        })
-        break
       case 404:
         // console.log("你要找的頁面不存在")
         store.showToast({
@@ -120,10 +108,8 @@ var api = {
   async get(database) {
     console.log('run get')
     try {
-      const get = await instance.post(`GeneralController/getAll/${store.state.databaseName}/${database}`)
-      if (get.data.status != 401){
-        return get.data;
-      }
+      const get = await instance.post(`general/getAll/${store.state.databaseName}/${database}`)
+      return get.data;
     }catch (err){
       console.log('err',err)
     }

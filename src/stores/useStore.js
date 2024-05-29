@@ -3,11 +3,16 @@ import { defineStore } from 'pinia'
 
 export const useStore = defineStore('counter', () => {
   const state = {
-    verMsg: '2023.10.6.1',  //系統版本
+    verMsg: 'CURD Sample',  //系統版本
+    // databaseName: "news",  //登入廠商代號及讀取的資料庫名
     databaseName: "news",  //登入廠商代號及讀取的資料庫名
     // base_url: "https://www.pddtvgame.com/portfolioapi", //線上專用指定去讀圖片或其他東西的位置
     // base_url: "http://127.0.0.1/portfolioapi", //線上專用指定去讀圖片或其他東西的位置
-    base_url: "http://127.0.0.1/citest", //線上專用指定去讀圖片或其他東西的位置
+    // base_url: "http://127.0.0.1/citest", //線上專用指定去讀圖片或其他東西的位置
+    base_url: "http://127.0.0.1/ci451api", //線上專用指定去讀圖片或其他東西的位置
+    
+    logined_token: '',
+    // logined_token: '3f6adc880c7ac2c5046d71cdf2dd932b8d06501cce0ccf28a9f7fe4452997f7abb94a95e760c979010da55f22fcd3f644516a7b8c3125c501a6d38089241574e33',
 
     loading: false,  //axios動畫開關狀況
     // audioSwitch: true, //音效開關

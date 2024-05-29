@@ -1,0 +1,37 @@
+{
+  "message": "Network Error",
+  "name": "AxiosError",
+  "stack": "AxiosError: Network Error\n    at XMLHttpRequest.handleError (http://127.0.0.1:5173/node_modules/.vite/deps/axios.js?v=664ce5e5:1454:14)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 10000,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "Authorization": ""
+    },
+    "baseURL": "http://127.0.0.1/ci451api",
+    "method": "post",
+    "url": "GeneralController/getAll/zhaoyang/personnel_nosql"
+  },
+  "code": "ERR_NETWORK",
+  "status": null
+}

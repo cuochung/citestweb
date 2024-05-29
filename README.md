@@ -1,30 +1,11 @@
-# citest
+2024.5.29
+開始調整樣本為CI451使用的CURD版本
+預計加入以下功能
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-# citestweb
+/* CI451版本後台API */
+1.加入token授權限制 
+2.使用ci451 的語法處理CURD 
+3.資料結構放在datalist 裡的就是Json檔
+4.處理搜尋都用Json語法處理
+5.使用PHPMailer處理Mail功能
+6.上傳功能
