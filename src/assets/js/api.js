@@ -13,18 +13,33 @@ import axios from 'axios'
 import qs from "qs";
 
 //axios基本設定 -> 及使用 instance取代axios 實例
-const instance = axios.create({
-  baseURL: store.state.base_url, //統一使用 vuex 的 store 裡的base_url
-  headers: { 
-		'Content-Type': 'application/json',
-		'Authorization' : store.state.logined_token
-	},
-  timeout: 10000
-});
+// const instance = axios.create({
+//   baseURL: store.state.base_url, //統一使用 vuex 的 store 裡的base_url
+//   headers: { 
+//     // 'Content-Type': 'application/x-www-form-urlencoded',
+// 		// 'Content-Type': 'application/json',
+// 		'Authorization' : store.state.logined_token
+// 	},
+//   timeout: 10000
+// });
 
+//函數來建立axios實例，每次請求都獲取最新的store狀態
+const createInstance = () => {
+  const store = useStore();
+  return axios.create({
+    baseURL: store.state.base_url,
+    headers: {
+      'Authorization': store.state.logined_token
+    },
+    timeout: 10000
+  });
+};
+
+const instance = createInstance();
 
 //執行前及執行前動作導入;例:動畫 //這裡重新宣告一次store,不然改變動畫沒反應
 instance.interceptors.request.use(function (config) {
+  console.log('loading animaction')
   // Do something before request is sent
   const store = useStore()  
   store.state.loading = true;
@@ -119,6 +134,7 @@ var api = {
   //get data
   async get(database) {
     console.log('run get')
+    const instance = createInstance();
     try {
       const get = await instance.post(`GeneralController/getAll/${store.state.databaseName}/${database}`)
       if (get.data.status != 401){
@@ -132,6 +148,7 @@ var api = {
   //add data
   async add(database, data) {
     console.log('run add')
+    const instance = createInstance();
     try {
       const get = await instance.post(`general/add/${store.state.databaseName}/${database}`, qs.stringify(data))
       return get.data;
@@ -144,6 +161,7 @@ var api = {
   //post data (edit , update)
   async post(database, data) {
     console.log('run post')
+    const instance = createInstance();
     try {
       const get = await instance.post(`general/edit/${store.state.databaseName}/${database}`, qs.stringify(data))
       return get.data;
@@ -156,6 +174,7 @@ var api = {
   //delete data
   async delete(database, data = null) {
     console.log('run delete')
+    const instance = createInstance();
     try {
       const get = await instance.post(`general/delv3/${store.state.databaseName}/${database}`, qs.stringify(data))
       return get.data;
@@ -167,8 +186,10 @@ var api = {
 
   //特別處理 url自定義
   async options(url, data = null) {
-    console.log('run options')
+    console.log('run options',data)
+    const instance = createInstance();
     try {
+      // const get = await instance.post(`${url}`, JSON.stringify(data))
       const get = await instance.post(`${url}`, qs.stringify(data))
       return get.data;
     } catch (err) {
@@ -191,8 +212,8 @@ var api = {
 
   //上傳檔案,多檔
   async upload(database, fd = null) {
-    console.log('run fileUploadMulti', `general/fileUploadMulti/${store.state.databaseName}/${database}`)
-
+    // console.log('run fileUploadMulti', `general/fileUploadMulti/${store.state.databaseName}/${database}`)
+    const instance = createInstance();
     try {
       const get = await instance.post(`general/fileUploadMulti/${store.state.databaseName}/${database}`, fd)
       return get.data;
@@ -206,6 +227,7 @@ var api = {
   //addMulti data
   async addMulti(database, data) {
     // console.log('run addMulti')
+    const instance = createInstance();
     try {
       const get = await instance.post(`general/addMulti/${store.state.databaseName}/${database}`, qs.stringify(data))
       return get.data;

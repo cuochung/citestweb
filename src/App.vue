@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import api from "@/assets/js/api.js";
 const $api = api;
+import { useStore } from '@/stores/useStore'
+const store = useStore();
 
 const datas = ref([])
 const loginList = ref({})
@@ -10,14 +12,54 @@ const dataList = ref({})
 const sheetName = "news" //設定存取的 sheetName 名稱
 const isEditing = ref(false); //設定是否為修改狀態
 
-onMounted(() => {
-  getAll()
+onMounted(async () => {
+  await checkLoginState()
+  await getAll()
 })
 
-const getAll = () => {
+//判斷登入狀態
+const checkLoginState = async () =>{
+  let loginState = localStorage.getItem('loginState');
+  if (loginState){
+    console.log('loginState exist');
+    loginState = JSON.parse(loginState)
+    store.state.logined_token = loginState.token
+  }
+}
+
+const getAll = async () => {
   $api.get(sheetName).then(rs => {
     console.log('Result:',sheetName, rs)
     datas.value = rs
+  })
+}
+
+//登出
+const logout = () =>{
+  $api.options("AuthController/logout/news").then(rs=>{
+    console.log('loginHandler Result:',rs)
+    if (rs.state){
+      store.state.logined_token = ''
+      localStorage.removeItem('loginState')
+      getAll();
+    }
+  })
+}
+
+//登入判斷
+const loginHandler = () =>{
+  $api.options("AuthController/loginHandler/news",loginList.value).then(rs=>{
+    // console.log('loginHandler Result:',rs)
+    if (rs.state){ //設定 token
+      store.state.logined_token = rs.token
+
+      let loginState = {
+        'project': 'apitest',
+        'token': rs.token,
+      }
+      localStorage.setItem('loginState',JSON.stringify(loginState))
+      getAll();
+    }
   })
 }
 
@@ -67,12 +109,19 @@ const delOK = (item) => {
 <template>
   <div>
     <div class="flex justify-between items-center">
-      <h1>codeigniter 4 testing (前台 CURD Finish Sample)</h1>
-      <div class="login_section">
-        帳號:<input type="text" v-model="loginList.account">
-        密碼:<input type="text" v-model="loginList.password">
-        <button class="h-8">Login</button>
+      <h1>codeigniter 4 前端樣本 (CURD,Login,Token)</h1>
+
+      <div class="login_section flex h-20 gap-5 items-center" v-if="!store.state.logined_token">
+        <div class="flex flex-col gap-2">
+          <div>帳號:<input type="text" v-model="loginList.account"></div>
+          <div>密碼:<input type="text" v-model="loginList.password"></div>
+        </div>
+        <button class="h-60%" @click="loginHandler()">Login</button>
       </div>
+      <div v-else>
+        <button @click="logout()">登出</button>
+      </div>
+      
       
     </div>
     <hr>
