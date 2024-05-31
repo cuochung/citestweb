@@ -56,7 +56,7 @@ instance.interceptors.response.use(function (response) {
   if (!navigator.onLine) {
     console.log("網路出了點問題，請重新連線後重整網頁");
     // alert("網路出了點問題，請確認連線後重整網頁");
-    store.showToast({
+    store.showToastMulti({
       type: 'error',
       message: '網路出了點問題，請重新連線後重整網頁',
       closeTime: 5,
@@ -67,7 +67,7 @@ instance.interceptors.response.use(function (response) {
   //伺服器未正常啟動時
   if (error.code == 'ERR_NETWORK'){
     // alert('伺服器未正常連結');
-    store.showToast({
+    store.showToastMulti({
       type: 'error',
       message: '伺服器未正常連結',
       closeTime: 5,
@@ -80,7 +80,7 @@ instance.interceptors.response.use(function (response) {
     switch (error.response.status) {
       case 404:
         // console.log("你要找的頁面不存在")
-        store.showToast({
+        store.showToastMulti({
           type: 'error',
           message: '請求不存在',
           closeTime: 5,
@@ -88,7 +88,7 @@ instance.interceptors.response.use(function (response) {
         break
       case 500:
         // console.log("程式發生問題")
-        store.showToast({
+        store.showToastMulti({
           type: 'error',
           message: '程式發生問題',
           closeTime: 5,
